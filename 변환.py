@@ -1,7 +1,6 @@
 print("미디->로직 변환 프로그램 Midi2Logic")
 print("설명을 전부 읽으셨길 바랍니다.")
 print()
-error=[]
 
 import mido
 with open("D:/정보.txt","r",encoding="UTF-8") as file:
@@ -10,7 +9,6 @@ with open("D:/정보.txt","r",encoding="UTF-8") as file:
     midilocate=file.readline().strip()
     logiclocate=file.readline().strip()
     left=file.read()
-
 
 if warning=="on" :
     while True:
