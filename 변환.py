@@ -61,7 +61,7 @@ with open(textlocate,"w") as file:
         error=1
 if error==1 :
     print(mid)
-    print("파일 경로: "+textlocate)
+    print("붙여넣는 위치: "+textlocate)
     input("저장 후 엔터를 눌러 계속합니다.")
     print()
 
@@ -72,8 +72,8 @@ track=0
 temp=0
 num=1
 play=0
-print("조정할 키를 입력하세요. 잘못된 입력은 0으로 처리됩니다. 너무 크거나 작을 경우 소리가 나지 않습니다.")
-key=input("예시: D를 D#으로 바꾸고 싶으면 0.5, C#으로 바꾸고 싶으면 -0.5 ")
+print("음정 조정값을 입력하세요. 잘못된 입력은 0으로 처리됩니다. 너무 높거나 낮은 소리는 나지 않습니다.")
+key=input("1음은 0.5이고, 1옥타브는 6입니다. 음수도 입력 가능합니다. ")
 try:
     key=float(key)
 except:
@@ -85,7 +85,7 @@ else:
         key=int(key*2)-24
 print()
 
-print("배속을 입력하세요. 잘못된 입력은 1로 처리됩니다.")
+print("연주 속도(배속)를 입력하세요. 잘못된 입력은 1로 처리됩니다.")
 speed=input("배속은 속도만 변화시키며, 음높이에는 영향을 주지 않습니다. ")
 try:
     speed=float(speed)
@@ -101,139 +101,174 @@ many=input("1은 '예', 그 외는 '아니요' ")
 print()
 
 with open(textlocate,"r") as file:
-    with open(logiclocate,"w") as logic:
-        while True:
-            temp2=-1
-            velo=""
-            x=file.readline().strip()
-            if x=="])" :
-                break
+    while True:
+        temp2=-1
+        velo=""
+        x=file.readline().strip()
+        if x=="])" :
+            break
+        else :
+            y=x.split("(")
+            if y[0]=="MidiTrack" :
+                if midi[track]!=[1] :
+                    track+=1
+                    midi.append([1])
+                if play==1 :
+                    num+=1
+                    play=0
+                if tp!=1 :
+                    num=1
+                temp=0
             else :
-                y=x.split("(")
-                if y[0]=="MidiTrack" :
-                    if midi[track]!=[1] :
-                        track+=1
-                        midi.append([1])
-                    if play==1 :
-                        num+=1
-                        play=0
-                    if tp!=1 :
-                        num=1
-                    temp=0
-                else :
-                    z=y[1].split(",")
-                    for I in range(len(z)):
-                        z[I]=z[I].strip()
-                    if y[0]=="MidiFile" :
-                        for I in range(len(z)):
-                            w=z[I].split("=")
-                            if w[0]=="type" :
-                                tp=int(w[1])
-                            if w[0]=="ticks_per_beat" :
-                                tpb=int(w[1])
-                    if y[0]=="MetaMessage" :
-                        for I in range(len(z)):
-                            w=z[I].split("=")
-                            if z[0]=="'set_tempo'" :
-                                if w[0]=="tempo" :
-                                    temp2=int(w[1])
-                            else :
-                                temp2=-1
-                    if y[0]=="Message" :
-                        for I in range(len(z)):
-                            w=z[I].split("=")
-                            if z[0]=="'note_on'" :
-                                if w[0]=="note" :
-                                    try:
-                                        temp2="control config block"+str(num)+" "+str(note[int(w[1])+key])
-                                        bn=str(block[int(w[1])+key])
-                                    except:
-                                        temp2=-1
-                                    else:
-                                        if many=="1" :
-                                            temp2="control config block"+bn+" "+str(note[int(w[1])+key])
-                                        if int(w[1])+key<0 :
-                                            temp2=-1
-                                if w[0]=="velocity" :
-                                    if w[1]=="0" :
-                                        temp2=-1
-                                    if type(temp2)!=int :
-                                        velo="control color block"+bn+" inst "+str(int(bn)-1)+" "+str(int(w[1])/50)
-                                if temp2!=-1 :
-                                    play=1
-                            else :
-                                temp2=-1
+                z=y[1].split(",")
+                for I in range(len(z)):
+                    z[I]=z[I].strip()
+                if y[0]=="MidiFile" :
                     for I in range(len(z)):
                         w=z[I].split("=")
-                        if w[0]=="time" :
-                            v=w[1].split(")")
-                            temp+=int(v[0])
-            temp2=[temp2, temp]
-            velo=[velo, temp]
-            if temp2[0]!=-1 :
-                if many=="1" and velo[0]!="" :
-                    midi[track].append(velo)
-                midi[track].append(temp2)
-        if midi[len(midi)-1]==[1] :
-            temp2=[]
-            for I in range(len(midi)-1):
-                temp2.append(midi[I])
-            midi=temp2
+                        if w[0]=="type" :
+                            tp=int(w[1])
+                        if w[0]=="ticks_per_beat" :
+                            tpb=int(w[1])
+                if y[0]=="MetaMessage" :
+                    for I in range(len(z)):
+                        w=z[I].split("=")
+                        if z[0]=="'set_tempo'" :
+                            if w[0]=="tempo" :
+                                temp2=int(w[1])
+                        else :
+                            temp2=-1
+                if y[0]=="Message" :
+                    for I in range(len(z)):
+                        w=z[I].split("=")
+                        if z[0]=="'note_on'" :
+                            if w[0]=="note" :
+                                try:
+                                    temp2="control config block"+str(num)+" "+str(note[int(w[1])+key])
+                                    bn=str(block[int(w[1])+key])
+                                except:
+                                    temp2=-1
+                                else:
+                                    if many=="1" :
+                                        temp2="control config block"+bn+" "+str(note[int(w[1])+key])
+                                    if int(w[1])+key<0 :
+                                        temp2=-1
+                            if w[0]=="velocity" :
+                                if w[1]=="0" :
+                                    temp2=-1
+                                if type(temp2)!=int :
+                                    velo="control color block"+bn+" inst "+str(int(bn)-1)+" "+str(int(w[1])/50)
+                            if temp2!=-1 :
+                                play=1
+                        else :
+                            temp2=-1
+                for I in range(len(z)):
+                    w=z[I].split("=")
+                    if w[0]=="time" :
+                        v=w[1].split(")")
+                        temp+=int(v[0])
+        temp2=[temp2, temp]
+        velo=[velo, temp]
+        if temp2[0]!=-1 :
+            if many=="1" and velo[0]!="" :
+                midi[track].append(velo)
+            midi[track].append(temp2)
+    if midi[len(midi)-1]==[1] :
+        temp2=[]
+        for I in range(len(midi)-1):
+            temp2.append(midi[I])
+        midi=temp2
 
-        line=0
-        tline=0
-        tempo=0
-        total=0
-        over=0
-        logic.write("read inst cell1 0\n")
-        logic.write("read start cell1 1\n")
-        logic.write("jump 4 equal start 0\n")
-        logic.write("end\n")
-        if many=="1" :
-            num=0
-        else :
-            for I in range(1,num+1):
-                logic.write("control color block")
-                logic.write(str(I))
-                logic.write(" inst 0 0 0\n")
-        logic.write("sensor on switch1 @enabled\n")
-        logic.write("jump ")
-        logic.write(str(7+num))
-        logic.write(" equal on 1\n")
-        logic.write("end\n")
-        if tp==1 :
-            while True:
-                done=0
-                for I in range(len(midi)):
-                    if midi[I][0]==len(midi[I]) :
-                        done+=1
+    if many=="1" :
+        print("연주하는 데는 84개의 노트 블록 Plus가 필요합니다.\n")
+    else :
+        print("연주하는 데는",str(num)+"개의 노트 블록이 필요합니다.\n")
+    logic=open(logiclocate,"w")
+    print("출력된 내용을 1번째 프로세서에 붙여넣으세요.")
+    print("출력 위치:",logiclocate)
+    line=0
+    tline=0
+    tempo=0
+    total=0
+    over=0
+    logic.write("read inst cell1 0\n")
+    logic.write("read start cell1 1\n")
+    logic.write("jump 4 equal start 0\n")
+    logic.write("end\n")
+    if many=="1" :
+        num=0
+    else :
+        for I in range(1,num+1):
+            logic.write("control color block")
+            logic.write(str(I))
+            logic.write(" inst 0 0 0\n")
+    logic.write("sensor on switch1 @enabled\n")
+    logic.write("jump ")
+    logic.write(str(7+num))
+    logic.write(" equal on 1\n")
+    logic.write("end\n")
+    if tp==1 :
+        while True:
+            done=0
+            for I in range(len(midi)):
+                if midi[I][0]==len(midi[I]) :
+                    done+=1
+                else :
+                    if I==done :
+                        time=midi[I][midi[I][0]][1]
+                        temp=midi[I][midi[I][0]][0]
+                        temp2=I
                     else :
-                        if I==done :
+                        if time>midi[I][midi[I][0]][1] :
                             time=midi[I][midi[I][0]][1]
                             temp=midi[I][midi[I][0]][0]
                             temp2=I
-                        else :
-                            if time>midi[I][midi[I][0]][1] :
-                                time=midi[I][midi[I][0]][1]
-                                temp=midi[I][midi[I][0]][0]
-                                temp2=I
-                if done==len(midi) :
-                    break
+            if done==len(midi) :
+                break
+            if line>=900 :
+                over+=1
+                logic.write("write inst cell1 0\n")
+                logic.write("write "+str(over)+" cell1 1\n")
+                logic.close()
+                input("900출을 초과하였습니다. 엔터를 눌러 다음 프로세서로 넘어갑니다.\n")
+                logic=open(logiclocate,"w")
+                print("로직 코드가 출력된 파일을 닫았다가 다시 열어주세요.")
+                print("출력된 내용을",str(over+1)+"번째 프로세서에 붙여넣으세요.")
+                logic.write("read inst cell1 0\n")
+                logic.write("read start cell1 1\n")
+                logic.write("jump 4 equal start ")
+                logic.write(str(over))
+                logic.write("\n")
+                logic.write("end\n")
+                line=0
+            if time-total>0 :
+                logic.write("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
+                total=time
+                line+=1
+                tline+=1
+            if type(temp)==int :
+                tempo=temp/speed
+            else :
+                logic.write(temp+"\n")
+                line+=1
+                tline+=1
+            midi[temp2][0]+=1
+    else :
+        for I in range(len(midi)):
+            time=0
+            total=0
+            for J in range(1, len(midi[I])):
+                temp=midi[I][J][0]
+                time=midi[I][J][1]
                 if line>=900 :
                     over+=1
                     logic.write("write inst cell1 0\n")
-                    logic.write("write ")
-                    logic.write(str(over))
-                    logic.write(" cell1 1\n")
-                    logic.write("\n\n\n")
-                    logic.write("-"*57)
-                    logic.write("\n")
-                    logic.write("!"*20)
-                    logic.write(" 주의: 900라인 초과! ")
-                    logic.write("!"*20)
-                    logic.write("\n")
-                    logic.write("-"*57)
-                    logic.write("\n\n\n\n")
+                    logic.write("write "+str(over)+" cell1 1\n")
+                    logic.close()
+                    input("900출을 초과하였습니다. 엔터를 눌러 다음 프로세서로 넘어갑니다.\n")
+                    logic=open(logiclocate,"w")
+                    print("로직 코드가 출력된 파일을 닫았다가 다시 열어주세요.")
+                    print("출력된 내용을",str(over+1)+"번째 프로세서에 붙여넣으세요.")
                     logic.write("read inst cell1 0\n")
                     logic.write("read start cell1 1\n")
                     logic.write("jump 4 equal start ")
@@ -252,65 +287,25 @@ with open(textlocate,"r") as file:
                     logic.write(temp+"\n")
                     line+=1
                     tline+=1
-                midi[temp2][0]+=1
-        else :
-            for I in range(len(midi)):
-                time=0
-                total=0
-                for J in range(1, len(midi[I])):
-                    temp=midi[I][J][0]
-                    time=midi[I][J][1]
-                    if line>=900 :
-                        over+=1
-                        logic.write("write inst cell1 0\n")
-                        logic.write("write ")
-                        logic.write(str(over))
-                        logic.write(" cell1 1\n")
-                        logic.write("\n\n\n")
-                        logic.write("-"*57)
-                        logic.write("\n")
-                        logic.write("!"*20)
-                        logic.write(" 주의: 900라인 초과! ")
-                        logic.write("!"*20)
-                        logic.write("\n")
-                        logic.write("-"*57)
-                        logic.write("\n\n\n\n")
-                        logic.write("read inst cell1 0\n")
-                        logic.write("read start cell1 1\n")
-                        logic.write("jump 4 equal start ")
-                        logic.write(str(over))
-                        logic.write("\n")
-                        logic.write("end\n")
-                        line=0
-                    if time-total>0 :
-                        logic.write("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
-                        total=time
-                        line+=1
-                        tline+=1
-                    if type(temp)==int :
-                        tempo=temp/speed
-                    else :
-                        logic.write(temp+"\n")
-                        line+=1
-                        tline+=1
-        logic.write("set time1 @time\n")
-        if many!="1" :
-            for I in range(1,num+1):
-                logic.write("control color block")
-                logic.write(str(I))
-                logic.write(" inst 0 0 0\n")
-        logic.write("control enabled switch1 0 0 0 0\n")
-        logic.write("set time2 @time\n")
-        logic.write("op sub time time2 time1\n")
-        logic.write("jump ")
-        last=line+5
-        if num==1 :
-            last+=(num+3)
-        logic.write(str(last))
-        logic.write(" lessThan time 1000\n")
-        logic.write("write 0 cell1 1\n")
+    logic.write("set time1 @time\n")
+    if many!="1" :
+        for I in range(1,num+1):
+            logic.write("control color block")
+            logic.write(str(I))
+            logic.write(" inst 0 0 0\n")
+    logic.write("control enabled switch1 0 0 0 0\n")
+    logic.write("set time2 @time\n")
+    logic.write("op sub time time2 time1\n")
+    logic.write("jump ")
+    last=line+5
+    if num==1 :
+        last+=(num+3)
+    logic.write(str(last))
+    logic.write(" lessThan time 1000\n")
+    logic.write("write 0 cell1 1\n")
+logic.close()
 
-print("sucess!\n(",end="")
+print("모든 내용이 출력되었습니다. (",end="")
 if many=="1" :
     num=84
 print(num,"block",end="")
