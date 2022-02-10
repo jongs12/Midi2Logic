@@ -18,6 +18,8 @@ branches에 조금 다른 버전도 있어요. 확인해 보세요!
 
 깃헙은 처음이라 많이 난잡해도 양해 부탁드려요...
 
+비록 나중에 더 좋은 프로그램이 나온다고 해도, 제가 이런 것을 시도했다는 것을 기억해 주세요...
+
 [EN]
 ---
 This is a program that reads a midi file and creates a logic code to play the note block of '[Betamindy](https://github.com/sk7725/BetaMindy),' one of the mods of the game '[Mindustry](https://github.com/Anuken/Mindustry).'
@@ -32,3 +34,5 @@ Caution: Because it uses file input/output code, it may delete existing files if
 There's a slightly different version of Branches. Check it out!
 
 It's my first time using Github, so I ask for your understanding even if it's very chaotic.
+
+Even if a better program comes out later, please remember that I tried this...
