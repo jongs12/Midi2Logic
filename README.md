@@ -15,7 +15,11 @@ IDLE로 실행한다는 것은 한 줄씩 실행한다는 것이 아니라, 셸 
 
 주의: 파일입출력 코드를 사용하기 때문에, 잘못하면 기존 파일을 날려먹을 수도 있습니다. 조심하세요.
 
-branches에 조금 다른 버전도 있어요. 확인해 보세요!
+다운받은 그대로.py 파일은 파일에 나와 있듯이 정보.txt 파일을 Downloads에 받아서 '선택된 폴더 하위에 압축파일명으로 폴더 생성' 없이 압축 해제한 그대로 사용해야 합니다.
+(파일 경로가 C:\Users\(사용자명)\Downloads\Midi2Logic-main\)
+
+파일입출력을 사용하려면 파일 경로를 알아야 하는데, 이게 사람마다 다 다르기 때문에 어쩔 수 없어요.
+나머지는 변환.py와 같습니다.
 
 깃헙은 처음이라 많이 난잡해도 양해 부탁드려요.
 
@@ -33,7 +37,7 @@ Details are in the 정보.txt file. Read it. It's only in Korean because I'm not
 
 Caution: Because it uses file input/output code, it may delete existing files if it is wrong. Be careful.
 
-There's a slightly different version of Branches. Check it out!
+다운받은 그대로.py file should be used while the location of the 정보.txt file is 'C:\Users\(username)\Downloads\Midi2Logic-main'.
 
 It's my first time using Github, so I ask for your understanding even if it's very chaotic.
 
