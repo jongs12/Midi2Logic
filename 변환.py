@@ -2,6 +2,7 @@ print("미디->로직 변환 프로그램 Midi2Logic")
 print("설명을 전부 읽으셨길 바랍니다.")
 print()
 
+#확인
 import mido
 with open("D:/정보.txt","r",encoding="UTF-8") as file:
     warning=file.readline().strip()
@@ -100,6 +101,7 @@ print("건반 모드를 켜시겠습니까?")
 many=input("1은 '예', 그 외는 '아니요' ")
 print()
 
+#읽기
 with open(textlocate,"r") as file:
     while True:
         temp2=-1
@@ -179,34 +181,26 @@ with open(textlocate,"r") as file:
             temp2.append(midi[I])
         midi=temp2
 
-    if many=="1" :
-        print("연주하는 데는 84개의 노트 블록 Plus가 필요합니다.\n")
-    else :
-        print("연주하는 데는",str(num)+"개의 노트 블록이 필요합니다.\n")
-    logic=open(logiclocate,"w")
-    print("출력된 내용을 1번째 프로세서에 붙여넣으세요.")
-    print("출력 위치:",logiclocate)
+#쓰기
+    code=[[]]
+    pro=0
     line=0
     tline=0
     tempo=0
     total=0
     over=0
-    logic.write("read inst cell1 0\n")
-    logic.write("read start cell1 1\n")
-    logic.write("jump 4 equal start 0\n")
-    logic.write("end\n")
+    code[pro].append("read inst cell1 0\n")
+    code[pro].append("read start cell1 1\n")
+    code[pro].append("jump 4 equal start 0\n")
+    code[pro].append("end\n")
     if many=="1" :
         num=0
     else :
         for I in range(1,num+1):
-            logic.write("control color block")
-            logic.write(str(I))
-            logic.write(" inst 0 0 0\n")
-    logic.write("sensor on switch1 @enabled\n")
-    logic.write("jump ")
-    logic.write(str(7+num))
-    logic.write(" equal on 1\n")
-    logic.write("end\n")
+            code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+    code[pro].append("sensor on switch1 @enabled\n")
+    code[pro].append("jump "+str(7+num)+" equal on 1\n")
+    code[pro].append("end\n")
     if tp==1 :
         while True:
             done=0
@@ -227,29 +221,24 @@ with open(textlocate,"r") as file:
                 break
             if line>=900 :
                 over+=1
-                logic.write("write inst cell1 0\n")
-                logic.write("write "+str(over)+" cell1 1\n")
-                logic.close()
-                input("900출을 초과하였습니다. 엔터를 눌러 다음 프로세서로 넘어갑니다.\n")
-                logic=open(logiclocate,"w")
-                print("로직 코드가 출력된 파일을 닫았다가 다시 열어주세요.")
-                print("출력된 내용을",str(over+1)+"번째 프로세서에 붙여넣으세요.")
-                logic.write("read inst cell1 0\n")
-                logic.write("read start cell1 1\n")
-                logic.write("jump 4 equal start ")
-                logic.write(str(over))
-                logic.write("\n")
-                logic.write("end\n")
+                code[pro].append("write inst cell1 0\n")
+                code[pro].append("write "+str(over)+" cell1 1\n")
+                code.append([])
+                pro+=1
+                code[pro].append("read inst cell1 0\n")
+                code[pro].append("read start cell1 1\n")
+                code[pro].append("jump 4 equal start "+str(over)+"\n")
+                code[pro].append("end\n")
                 line=0
             if time-total>0 :
-                logic.write("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
+                code[pro].append("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
                 total=time
                 line+=1
                 tline+=1
             if type(temp)==int :
                 tempo=temp/speed
             else :
-                logic.write(temp+"\n")
+                code[pro].append(temp+"\n")
                 line+=1
                 tline+=1
             midi[temp2][0]+=1
@@ -262,50 +251,42 @@ with open(textlocate,"r") as file:
                 time=midi[I][J][1]
                 if line>=900 :
                     over+=1
-                    logic.write("write inst cell1 0\n")
-                    logic.write("write "+str(over)+" cell1 1\n")
-                    logic.close()
-                    input("900출을 초과하였습니다. 엔터를 눌러 다음 프로세서로 넘어갑니다.\n")
-                    logic=open(logiclocate,"w")
-                    print("로직 코드가 출력된 파일을 닫았다가 다시 열어주세요.")
-                    print("출력된 내용을",str(over+1)+"번째 프로세서에 붙여넣으세요.")
-                    logic.write("read inst cell1 0\n")
-                    logic.write("read start cell1 1\n")
-                    logic.write("jump 4 equal start ")
-                    logic.write(str(over))
-                    logic.write("\n")
-                    logic.write("end\n")
+                    code[pro].append("write inst cell1 0\n")
+                    code[pro].append("write "+str(over)+" cell1 1\n")
+                    code.append([])
+                    pro+=1
+                    code[pro].append("read inst cell1 0\n")
+                    code[pro].append("read start cell1 1\n")
+                    code[pro].append("jump 4 equal start "+str(over)+"\n")
+                    code[pro].append("end\n")
                     line=0
                 if time-total>0 :
-                    logic.write("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
+                    code[pro].append("wait "+str(((time-total)*tempo)/(tpb*1000000))+"\n")
                     total=time
                     line+=1
                     tline+=1
                 if type(temp)==int :
                     tempo=temp/speed
                 else :
-                    logic.write(temp+"\n")
+                    code[pro].append(temp+"\n")
                     line+=1
                     tline+=1
-    logic.write("set time1 @time\n")
+    code[pro].append("set time1 @time\n")
     if many!="1" :
         for I in range(1,num+1):
-            logic.write("control color block")
-            logic.write(str(I))
-            logic.write(" inst 0 0 0\n")
-    logic.write("control enabled switch1 0 0 0 0\n")
-    logic.write("set time2 @time\n")
-    logic.write("op sub time time2 time1\n")
-    logic.write("jump ")
+            code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+    code[pro].append("control enabled switch1 0 0 0 0\n")
+    code[pro].append("set time2 @time\n")
+    code[pro].append("op sub time time2 time1\n")
     last=line+5
     if num==1 :
         last+=(num+3)
-    logic.write(str(last))
-    logic.write(" lessThan time 1000\n")
-    logic.write("write 0 cell1 1\n")
-logic.close()
+    code[pro].append("jump "+str(last)+" lessThan time 1000\n")
+    code[pro].append("write 0 cell1 1\n")
 
-print("모든 내용이 출력되었습니다. (",end="")
+#출력
+over+=1
+print("Success!\n(",end="")
 if many=="1" :
     num=84
 print(num,"block",end="")
@@ -314,4 +295,34 @@ if num>=2 :
 print(",",tline,"line",end="")
 if tline>=2 :
     print("s",end="")
-print(")")
+print(")\n")
+
+print("출력 위치:",logiclocate)
+temp=0
+while True:
+    if temp==-1 :
+        break
+    else :
+        print()
+        print("페이지",str(temp+1)+"/"+str(over))
+        with open(logiclocate,"w") as file:
+            for I in range(len(code[temp])):
+                file.write(code[temp][I])
+    print("출력할 페이지 번호를 입력하세요. 0을 입력하면 출력을 중단합니다.")
+    temp2=input("아무것도 입력하지 않으면 자동으로 다음 페이지를 출력합니다. ")
+    try:
+        temp2=int(temp2)
+    except:
+        if temp+1==over :
+            temp=0
+        else :
+            temp+=1
+    else:
+        if 0<=temp2<=over :
+            temp=temp2-1
+        else :
+            if temp+1==over :
+                temp=0
+            else :
+                temp+=1
+exit(0)
