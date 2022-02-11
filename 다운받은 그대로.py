@@ -291,7 +291,7 @@ with open(textlocate,"r") as file:
     code[pro].append("set time2 @time\n")
     code[pro].append("op sub time time2 time1\n")
     last=line+5
-    if num==1 :
+    if over==0 :
         last+=(num+3)
     code[pro].append("jump "+str(last)+" lessThan time 1000\n")
     code[pro].append("write 0 cell1 1\n")
