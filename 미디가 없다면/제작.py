@@ -18,7 +18,6 @@ while True:
     finally:
         print()
 
-import mido
 with open(name,"r",encoding="UTF-8") as file:
     warning=file.readline().strip()
     logiclocate=file.readline().strip()
