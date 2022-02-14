@@ -18,6 +18,7 @@ while True:
     finally:
         print()
 
+import mido
 with open(name,"r",encoding="UTF-8") as file:
     warning=file.readline().strip()
     logiclocate=file.readline().strip()
@@ -55,6 +56,7 @@ if warning=="on" :
 block=['C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7']
 note=['0.00', '0.01', '0.02', '0.03', '0.04', '0.05', '0.06', '0.07', '0.08', '0.09', '0.10', '0.11', '1.00', '1.01', '1.02', '1.03', '1.04', '1.05', '1.06', '1.07', '1.08', '1.09', '1.10', '1.11', '2.00', '2.01', '2.02', '2.03', '2.04', '2.05', '2.06', '2.07', '2.08', '2.09', '2.10', '2.11', '3.00', '3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '4.00', '4.01', '4.02', '4.03', '4.04', '4.05', '4.06', '4.07', '4.08', '4.09', '4.10', '4.11', '5.00', '5.01', '5.02', '5.03', '5.04', '5.05', '5.06', '5.07', '5.08', '5.09', '5.10', '5.11', '6.00', '6.01', '6.02', '6.03', '6.04', '6.05', '6.06', '6.07', '6.08', '6.09', '6.10', '6.11']
 midi=[]
+drum=[]
 track=-1
 num=1
 play=0
@@ -101,13 +103,15 @@ with open(name,"r",encoding="UTF-8") as file:
         if x=="end" :
             break
         else :
-            if x=="track" :
+            if x=="track" or x=="drum" :
                 track+=1
                 midi.append([1])
                 temp=0
                 if play==1 :
                     num+=1
                     play=0
+                    if x=="drum" :
+                        drum.append(num)
             else :
                 y=x.split(" ")
                 try:
@@ -116,14 +120,24 @@ with open(name,"r",encoding="UTF-8") as file:
                     for I in range(84):
                         if block[I]==y[0] :
                             try:
-                                temp2="control config block"+str(num)+" "+str(note[I+key])
-                                if many=="1" :
-                                    velo="control color block"+str(I+1+key)+" inst "+str(I+key)+" 1"
-                                    temp2="control config block"+str(I+1+key)+" "+str(note[I+key])
+                                non=0
+                                for J in range(len(drum)):
+                                    if drum[J]==num :
+                                        non=1
+                                if non==0 :
+                                    temp2="control config block"+str(num)+" "+str(note[I+key])
+                                    if many=="1" :
+                                        velo="control color block"+str(I+1+key)+" inst "+str(I+key)+" 1"
+                                        temp2="control config block"+str(I+1+key)+" "+str(note[I+key])
+                                else :
+                                    temp2="control config block"+str(num)+" "+str(note[I])
+                                    if many=="1" :
+                                        velo="control color block"+str(I+85)+" 10 "+str(I)+" 1"
+                                        temp2="control config block"+str(I+85)+" "+str(note[I])
                             except:
                                 temp2=-1
                             else:
-                                if I+key<0 :
+                                if I+key<0 and non==0:
                                     temp2=-1
                                 else :
                                     play=1
@@ -154,7 +168,14 @@ with open(name,"r",encoding="UTF-8") as file:
         num=0
     else :
         for I in range(1,num+1):
-            code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+            non=0
+            for J in range(len(drum)):
+                if drum[J]==I :
+                    non=1
+            if non==0 :
+                code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+            else :
+                code[pro].append("control color block"+str(I)+" 10 0 0 0\n")
     code[pro].append("sensor on switch1 @enabled\n")
     code[pro].append("jump "+str(7+num)+" equal on 1\n")
     code[pro].append("end\n")
@@ -201,7 +222,14 @@ with open(name,"r",encoding="UTF-8") as file:
 code[pro].append("set time1 @time\n")
 if many!="1" :
     for I in range(1,num+1):
-        code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+        non=0
+        for J in range(len(drum)):
+            if drum[J]==I :
+                non=1
+        if non==0 :
+            code[pro].append("control color block"+str(I)+" inst 0 0 0\n")
+        else :
+            code[pro].append("control color block"+str(I)+" 10 0 0 0\n")
 code[pro].append("control enabled switch1 0 0 0 0\n")
 code[pro].append("set time2 @time\n")
 code[pro].append("op sub time time2 time1\n")
