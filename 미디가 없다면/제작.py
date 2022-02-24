@@ -94,62 +94,110 @@ with open(name,"r",encoding="UTF-8") as file:
         if x=="start" :
             break
     while True:
-        temp2=-1
         velo=""
+        temp2=-1
         x=file.readline().strip()
-        if x=="" :
-            continue
+        y=x.split(" ")
         if x=="end" :
+            if loops>0 :
+                for I in range(loops-1):
+                    for J in range(len(loop1)):
+                        midi[track].append(loop1[J]+[])
+                    for J in range(len(loop1)):
+                        loop1[J][1]+=temp
+                    for J in range(len(loop2)):
+                        midi[track].append(loop2[J]+[])
+                    for J in range(len(loop2)):
+                        loop2[J][1]+=temp
+                for I in range(len(loop1)):
+                    midi[track].append(loop1[I]+[])
             break
         else :
-            if x=="track" or x=="drum" :
+            if y[0]=="track" or y[0]=="drum" :
+                if loops>0 :
+                    for I in range(loops-1):
+                        for J in range(len(loop1)):
+                            midi[track].append(loop1[J]+[])
+                        for J in range(len(loop1)):
+                            loop1[J][1]+=temp
+                        for J in range(len(loop2)):
+                            midi[track].append(loop2[J]+[])
+                        for J in range(len(loop2)):
+                            loop2[J][1]+=temp
+                    for I in range(len(loop1)):
+                        midi[track].append(loop1[I]+[])
+                loop1=[]
+                loop2=[]
+                try:
+                    loops=int(y[1])
+                except:
+                    loops=1
                 track+=1
                 midi.append([1])
                 temp=0
+                fine=0
                 if play==1 :
                     num+=1
                     play=0
-                    if x=="drum" :
+                    if y[0]=="drum" :
                         drum.append(num)
+            elif y[0]=="fine" :
+                fine=1
+                continue
             else :
-                y=x.split(" ")
                 try:
-                    y[0]=float(y[0])
+                    y[1]=float(y[1])
                 except:
-                    for I in range(84):
-                        if block[I]==y[0] :
-                            try:
-                                non=0
-                                for J in range(len(drum)):
-                                    if drum[J]==num :
-                                        non=1
-                                if non==0 :
-                                    temp2="control config block"+str(num)+" "+str(note[I+key])
-                                    if many=="1" :
-                                        velo="control color block"+str(I+1+key)+" inst "+str(I+key)+" 1"
-                                        temp2="control config block"+str(I+1+key)+" "+str(note[I+key])
-                                else :
-                                    temp2="control config block"+str(num)+" "+str(note[I])
-                                    if many=="1" :
-                                        velo="control color block"+str(I+85)+" 10 "+str(I)+" 1"
-                                        temp2="control config block"+str(I+85)+" "+str(note[I])
-                            except:
-                                temp2=-1
-                            else:
-                                if I+key<0 and non==0:
-                                    temp2=-1
-                                else :
-                                    play=1
+                    continue
                 else:
-                    temp2=y[0]
-                finally:
-                    if temp2!=-1 :
-                        if many=="1" and velo!="" :
-                            velo=[velo,temp]
-                            midi[track].append(velo)
-                        temp2=[temp2,temp]
-                        midi[track].append(temp2)
-                    temp+=float(y[1])
+                    try:
+                        y[0]=float(y[0])
+                    except:
+                        for I in range(84):
+                            if block[I]==y[0] :
+                                try:
+                                    city=float(y[2])
+                                except:
+                                    city=1
+                                try:
+                                    non=0
+                                    for J in range(len(drum)):
+                                        if drum[J]==num :
+                                            non=1
+                                    if non==0 :
+                                        temp2="control config block"+str(num)+" "+str(note[I+key])
+                                        if many=="1" :
+                                            velo="control color block"+str(I+1+key)+" inst "+str(I+key)+" "+str(city)
+                                            temp2="control config block"+str(I+1+key)+" "+str(note[I+key])
+                                    else :
+                                        temp2="control config block"+str(num)+" "+str(note[I])
+                                        if many=="1" :
+                                            velo="control color block"+str(I+85)+" 10 "+str(I)+" "+str(city)
+                                            temp2="control config block"+str(I+85)+" "+str(note[I])
+                                except:
+                                    temp2=-1
+                                else:
+                                    if I+key<0 and non==0:
+                                        temp2=-1
+                                    else :
+                                        play=1
+                    else:
+                        temp2=y[0]
+                    finally:
+                        if temp2!=-1 :
+                            if fine==1 :
+                                if many=="1" and velo!="" :
+                                    velo=[velo,temp]
+                                    loop2.append(velo)
+                                temp2=[temp2,temp]
+                                loop2.append(temp2)
+                            else:
+                                if many=="1" and velo!="" :
+                                    velo=[velo,temp]
+                                    loop1.append(velo)
+                                temp2=[temp2,temp]
+                                loop1.append(temp2)
+                        temp+=float(y[1])
 
 #쓰기
     code=[[]]
