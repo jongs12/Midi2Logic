@@ -3,54 +3,24 @@ print("설명을 전부 읽으셨길 바랍니다.")
 print()
 
 #확인
+this=__file__.split("\\")
+name=""
+name+=this[0]
+for I in range(1,len(this)-1):
+    name+="/"
+    name+=this[I]
 while True:
-    print("파일명을 제외한 파일 경로를 입력하세요.")
-    name=input("역슬래시(\)를 슬래시(/)로 바꿀 필요는 없습니다. ")
-    name=name.split("\\")
-    name="/".join(name)+"/악보.txt"
     try:
-        with open(name,"r",encoding="UTF-8") as file:
+        textlocate=name+"/"+input("파일 확장자를 제외한 악보의 이름을 입력하세요.")+".txt"
+        with open(textlocate,"r",encoding="UTF-8") as file:
             file.read()
-    except:
-        print("존재하지 않거나 잘못된 파일입니다.")
+    except FileNotFoundError:
+        print("그런 파일은 안 보이는데요, 다시 확인해 주시겠어요?")
+        print()
     else:
         break
-    finally:
-        print()
-
-with open(name,"r",encoding="UTF-8") as file:
-    warning=file.readline().strip()
-    logiclocate=file.readline().strip()
-    left=file.read()
-
-if warning=="on" :
-    while True:
-        try:
-            with open(logiclocate,"r") as file:
-                temp=file.read()
-        except FileNotFoundError:
-            logicnotexist=1
-        else:
-            logicnotexist=0
-        if logicnotexist==0 :
-            print("다음 파일이 이미 존재합니다:")
-            print(logiclocate)
-            print("계속하면 기존 파일이 삭제됩니다. 계속할까요?")
-            contin=input("1은 '예', 2는 '예, 다시 표시하지 않습니다.', 그 외는 '아니요' ")
-            if contin=="1" :
-                print()
-                break
-            if contin=="2" :
-                with open(name,"w",encoding="UTF-8") as file:
-                    file.write("off\n")
-                    file.write(logiclocate+"\n")
-                    file.write(left)
-                    print()
-                    break
-            print()
-        else :
-            print()
-            break
+logiclocate=name+"/로직.txt"
+print()
 
 block=['C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7']
 note=['0.00', '0.01', '0.02', '0.03', '0.04', '0.05', '0.06', '0.07', '0.08', '0.09', '0.10', '0.11', '1.00', '1.01', '1.02', '1.03', '1.04', '1.05', '1.06', '1.07', '1.08', '1.09', '1.10', '1.11', '2.00', '2.01', '2.02', '2.03', '2.04', '2.05', '2.06', '2.07', '2.08', '2.09', '2.10', '2.11', '3.00', '3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '4.00', '4.01', '4.02', '4.03', '4.04', '4.05', '4.06', '4.07', '4.08', '4.09', '4.10', '4.11', '5.00', '5.01', '5.02', '5.03', '5.04', '5.05', '5.06', '5.07', '5.08', '5.09', '5.10', '5.11', '6.00', '6.01', '6.02', '6.03', '6.04', '6.05', '6.06', '6.07', '6.08', '6.09', '6.10', '6.11']
