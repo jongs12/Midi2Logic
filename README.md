@@ -40,6 +40,7 @@ lines는 연주'에만' 필요한 코드 줄 수입니다. (스위치 상태 감
 [EN]
 ---
 (Translator is used)
+
 This is a program that reads a midi file and creates a logic code to play the note block of '[Betamindy](https://github.com/sk7725/BetaMindy),' one of the mods of the game '[Mindustry](https://github.com/Anuken/Mindustry).'
 Recommend '[Infinite Processor](https://github.com/FreezeMandu/infinite-processor)' mod when using.
 If you have some basic knowledge of [Mindustry](https://github.com/Anuken/Mindustry) and [Python](https://github.com/python), it will help you use it.
