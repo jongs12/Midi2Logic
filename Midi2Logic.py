@@ -2,55 +2,17 @@ print("미디->로직 변환 프로그램 Midi2Logic")
 print("설명을 전부 읽으셨길 바랍니다.")
 print()
 
-#확인
-import mido
-with open("D:/정보.txt","r",encoding="UTF-8") as file:
-    warning=file.readline().strip()
-    textlocate=file.readline().strip()
-    midilocate=file.readline().strip()
-    logiclocate=file.readline().strip()
-    left=file.read()
+this=__file__.split("\\")
+name=""
+name+=this[0]
+for I in range(1,len(this)-1):
+    name+="/"
+    name+=this[I]
+textlocate=name+"/미디.txt"
+midilocate=name+"/"+input("파일 확장자를 제외한 미디의 이름을 입력하세요.")+".mid"
+logiclocate=name+"/로직.txt"
 
-if warning=="on" :
-    while True:
-        try:
-            with open(textlocate,"r") as file:
-                temp=file.read()
-        except FileNotFoundError:
-            textnotexist=1
-        else:
-            textnotexist=0
-        try:
-            with open(logiclocate,"r") as file:
-                temp=file.read()
-        except FileNotFoundError:
-            logicnotexist=1
-        else:
-            logicnotexist=0
-        if textnotexist==0 or logicnotexist==0 :
-            print("다음 파일이 이미 존재합니다:")
-            if textnotexist==0 :
-                print(textlocate)
-            if logicnotexist==0 :
-                print(logiclocate)
-            print("계속하면 기존 파일이 삭제됩니다. 계속할까요?")
-            contin=input("1은 '예', 2는 '예, 다시 표시하지 않습니다.', 그 외는 '아니요' ")
-            if contin=="1" :
-                print()
-                break
-            if contin=="2" :
-                with open("D:/정보.txt","w",encoding="UTF-8") as file:
-                    file.write("off\n")
-                    file.write(textlocate+"\n")
-                    file.write(midilocate+"\n")
-                    file.write(logiclocate+"\n")
-                    file.write(left)
-                    print()
-                    break
-            print()
-        else :
-            print()
-            break
+import mido
 error=0
 with open(textlocate,"w") as file:
     mid=mido.MidiFile(midilocate,clip=True)
