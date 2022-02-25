@@ -14,7 +14,7 @@ mido 모듈을 설치하려면 명령 프롬프트에 따옴표 없이 'pip inst
 (아, 참고로 저는 파이썬 3 씁니다. 컴퓨터에 파이썬 2도 있는데 mido 설치하려니까 거기에 깔려서 수동으로 옮겼습니다.)
 
 이 프로그램에서는 이 프로그램과 같은 폴더에 들어 있는 파일로 읽기 및 쓰기를 합니다.
-해당하는 파일은 다음과 같습니다. 혹시나 기존 파일이 삭제되는 불상사를 막기 위해 확인해 주세요.
+해당하는 파일은 다음과 같습니다. 혹시나 기존 파일이 삭제되는 불상사를 막기 위해 확인해 주세요:
 미디.txt(쓰기 후 읽기), 로직.txt(쓰기만), (미디 이름).mid(프로그램 내에서 입력받음, 읽기만)
 
 가끔씩 인코딩 에러가 나는지 자동으로 미디 파일을 읽지 못할 때가 있습니다. 그럴 때는 Squeezed text라 쓰인 부분을 복사해서
@@ -48,7 +48,7 @@ If you have some basic knowledge of [Mindustry](https://github.com/Anuken/Mindus
 To install the mido module, type 'pip install mido' without quotes at the command prompt.
 
 This program reads and writes to files in the same folder as this program.
-The corresponding file is as follows. Just in case, please check to prevent accidents in which existing files are deleted.
+The corresponding file is as follows. Just in case, please check to prevent accidents in which existing files are deleted:
 미디.txt(read/write), 로직.txt(write only), (midi name).mid(receives input in program, read only)
 
 Sometimes it can't read the midi file automatically(i think there is an encoding error). In that case, copy the part that says Squeezed text and paste it to 미디.txt(in the same folder as the program) and save.
