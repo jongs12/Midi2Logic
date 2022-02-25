@@ -10,10 +10,19 @@ for I in range(1,len(this)-1):
     name+="/"
     name+=this[I]
 textlocate=name+"/미디.txt"
-midilocate=name+"/"+input("파일 확장자를 제외한 미디의 이름을 입력하세요.")+".mid"
-logiclocate=name+"/로직.txt"
-
 import mido
+while True:
+    try:
+        midilocate=name+"/"+input("파일 확장자를 제외한 미디의 이름을 입력하세요.")+".mid"
+        mid=mido.MidiFile(midilocate,clip=True)
+    except FileNotFoundError:
+        print("그런 파일은 안 보이는데요, 다시 확인해 주시겠어요?")
+        print()
+    else:
+        break
+logiclocate=name+"/로직.txt"
+print()
+
 error=0
 with open(textlocate,"w") as file:
     mid=mido.MidiFile(midilocate,clip=True)
