@@ -2,6 +2,7 @@ print("미디->로직 변환 프로그램 Midi2Logic")
 print("설명을 전부 읽으셨길 바랍니다.")
 print()
 
+#확인
 this=__file__.split("\\")
 name=""
 name+=this[0]
