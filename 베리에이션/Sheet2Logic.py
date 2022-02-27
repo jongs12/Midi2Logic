@@ -193,6 +193,7 @@ with open(textlocate,"r",encoding="UTF-8") as file:
     pro=0
     line=0
     tline=0
+    tempo=0
     over=0
     code[pro].append("read inst cell1 0\n")
     code[pro].append("read start cell1 1\n")
