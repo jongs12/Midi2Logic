@@ -30,7 +30,9 @@ drum=[]
 track=-1
 num=1
 play=0
+tempo=0
 loops=0
+verse=[]
 print("음정 조정값을 입력하세요. 잘못된 입력은 0으로 처리됩니다. 너무 높거나 낮은 소리는 나지 않습니다.")
 key=input("1음은 0.5이고, 1옥타브는 6입니다. 음수도 입력 가능합니다. ")
 try:
@@ -46,13 +48,17 @@ print()
 
 print("연주 속도(배속)를 입력하세요. 잘못된 입력은 1로 처리됩니다.")
 speed=input("배속은 속도만 변화시키며, 음높이에는 영향을 주지 않습니다. ")
+re=0
 try:
     speed=float(speed)
 except:
     speed=1
 else:
-    if speed<=0 :
+    if speed==0 :
         speed=1
+    if speed<0 :
+        re=1
+        
 print()
 
 print("건반 모드를 켜시겠습니까?")
@@ -74,30 +80,39 @@ with open(textlocate,"r",encoding="UTF-8") as file:
             if loops>0 :
                 for I in range(loops-1):
                     for J in range(len(loop1)):
-                        midi[track].append(loop1[J]+[])
+                        verse.append(loop1[J]+[])
                     for J in range(len(loop1)):
                         loop1[J][1]+=temp
                     for J in range(len(loop2)):
-                        midi[track].append(loop2[J]+[])
+                        verse.append(loop2[J]+[])
                     for J in range(len(loop2)):
                         loop2[J][1]+=temp
                 for I in range(len(loop1)):
-                    midi[track].append(loop1[I]+[])
+                    verse.append(loop1[I]+[])
+                if re==1 :
+                    verse.reverse()
+                for I in range(len(verse)):
+                    midi[track].append(verse[I])
             break
         else :
             if y[0]=="track" or y[0]=="drum" :
                 if loops>0 :
                     for I in range(loops-1):
                         for J in range(len(loop1)):
-                            midi[track].append(loop1[J]+[])
+                            verse.append(loop1[J]+[])
                         for J in range(len(loop1)):
                             loop1[J][1]+=temp
                         for J in range(len(loop2)):
-                            midi[track].append(loop2[J]+[])
+                            verse.append(loop2[J]+[])
                         for J in range(len(loop2)):
                             loop2[J][1]+=temp
                     for I in range(len(loop1)):
-                        midi[track].append(loop1[I]+[])
+                        verse.append(loop1[I]+[])
+                    if re==1 :
+                        verse.reverse()
+                    for I in range(len(verse)):
+                        midi[track].append(verse[I])
+                verse=[]
                 loop1=[]
                 loop2=[]
                 try:
@@ -155,6 +170,8 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                                         play=1
                     else:
                         temp2=y[0]
+                        if re==1 :
+                            tempo=abs(speed*y[0])
                     finally:
                         if temp2!=-1 :
                             if fine==1 :
@@ -176,8 +193,6 @@ with open(textlocate,"r",encoding="UTF-8") as file:
     pro=0
     line=0
     tline=0
-    tempo=0
-    total=0
     over=0
     code[pro].append("read inst cell1 0\n")
     code[pro].append("read start cell1 1\n")
@@ -209,10 +224,20 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                     temp=midi[I][midi[I][0]][0]
                     temp2=I
                 else :
-                    if time>midi[I][midi[I][0]][1] :
-                        time=midi[I][midi[I][0]][1]
-                        temp=midi[I][midi[I][0]][0]
-                        temp2=I
+                    if re==0 :
+                        if time>midi[I][midi[I][0]][1] :
+                            time=midi[I][midi[I][0]][1]
+                            temp=midi[I][midi[I][0]][0]
+                            temp2=I
+                        if time>=midi[I][midi[I][0]][1] and tline==0 :
+                            total=midi[I][midi[I][0]][1]
+                    else :
+                        if time<midi[I][midi[I][0]][1] :
+                            time=midi[I][midi[I][0]][1]
+                            temp=midi[I][midi[I][0]][0]
+                            temp2=I
+                        if time<=midi[I][midi[I][0]][1] and tline==0 :
+                            total=midi[I][midi[I][0]][1]
         if done==len(midi) :
             break
         if line>=900 :
@@ -226,13 +251,20 @@ with open(textlocate,"r",encoding="UTF-8") as file:
             code[pro].append("jump 4 equal start "+str(over)+"\n")
             code[pro].append("end\n")
             line=0
-        if time-total>0 :
-            code[pro].append("wait "+str((time-total)/(tempo/60))+"\n")
-            total=time
-            line+=1
-            tline+=1
+        if re==0 :
+            if time-total>0 :
+                code[pro].append("wait "+str((time-total)/(tempo/60))+"\n")
+                total=time
+                line+=1
+                tline+=1
+        else :
+            if total-time>0 :
+                code[pro].append("wait "+str((total-time)/(tempo/60))+"\n")
+                total=time
+                line+=1
+                tline+=1
         if type(temp)==float :
-            tempo=temp*speed
+            tempo=abs(speed*temp)
         else :
             code[pro].append(temp+"\n")
             line+=1
