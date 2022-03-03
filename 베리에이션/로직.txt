@@ -1,0 +1,15 @@
+draw clear 0 0 0 0 0 0
+draw color 255 0 0 255 0 0
+draw stroke 10 0 0 255 0 0
+draw line 0 80 80 0 0 0
+draw stroke 1 80 80 0 0 0
+draw line 0 40 80 40 0 0
+draw color 0 255 0 255 0 0
+draw rect 0 0 40 40 0 0
+draw lineRect 40 40 40 40 0 0
+draw color 0 0 255 255 0 0
+draw poly 40 40 5 40 0 0
+draw color 255 0 0 255 0 0
+draw linePoly 40 40 5 40 108 0
+draw color 0 255 0 255 0 0
+draw triangle 0 0 40 80 80 0
