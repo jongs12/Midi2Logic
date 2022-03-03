@@ -12,7 +12,7 @@ for I in range(1,len(this)-1):
     name+=this[I]
 textlocate=name+"/로직.txt"
 
-with open(textlocate,"r") as file:
+with open(textlocate,"r",encoding="UTF-8") as file:
     input("엔터를 눌러 작업을 시작합니다.")
     import turtle
     turtle.speed(0)
