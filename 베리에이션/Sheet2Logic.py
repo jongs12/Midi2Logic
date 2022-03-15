@@ -80,9 +80,9 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         velo=""
         temp2=-1
         x=file.readline().strip()
-        if x[0]=="*" :
-            continue
         y=x.split(" ")
+        if y[0]=="*" :
+            continue
         if x=="end" or x=="종료" :
             if loops>0 :
                 for J in range(len(loop1)):
