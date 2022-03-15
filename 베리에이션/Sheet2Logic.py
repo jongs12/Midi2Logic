@@ -80,6 +80,8 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         velo=""
         temp2=-1
         x=file.readline().strip()
+        if x[0]=="*" :
+            continue
         y=x.split(" ")
         if x=="end" or x=="종료" :
             if loops>0 :
@@ -249,7 +251,10 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                                         loop2.append(velo)
                                     temp2=[temp2,temp]
                                     loop2.append(temp2)
-                        temp+=float(y[1])
+                        try:
+                            temp+=float(y[1])
+                        except:
+                            temp+=0
 
 #쓰기
     code=[[]]
