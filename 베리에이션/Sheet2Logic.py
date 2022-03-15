@@ -11,7 +11,7 @@ for I in range(1,len(this)-1):
     name+=this[I]
 while True:
     try:
-        textlocate=name+"/"+input("파일 확장자를 제외한 악보의 이름을 입력하세요.")+".txt"
+        textlocate=name+"/"+input("파일 확장자를 제외한 악보의 이름을 입력하세요. ")+".txt"
         with open(textlocate,"r",encoding="UTF-8") as file:
             file.read()
     except FileNotFoundError:
@@ -80,6 +80,8 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         velo=""
         temp2=-1
         x=file.readline().strip()
+        if x=="" :
+            continue
         y=x.split(" ")
         if y[0]=="*" :
             continue
@@ -195,8 +197,8 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                 try:
                     y[1]=float(y[1])
                 except:
-                    continue
-                else:
+                    y=[y[0],0]
+                finally:
                     try:
                         y[0]=float(y[0])
                     except:
@@ -251,10 +253,7 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                                         loop2.append(velo)
                                     temp2=[temp2,temp]
                                     loop2.append(temp2)
-                        try:
-                            temp+=float(y[1])
-                        except:
-                            temp+=0
+                        temp+=float(y[1])
 
 #쓰기
     code=[[]]
