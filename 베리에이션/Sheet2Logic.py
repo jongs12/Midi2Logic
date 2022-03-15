@@ -74,14 +74,14 @@ print()
 with open(textlocate,"r",encoding="UTF-8") as file:
     while True:
         x=file.readline().strip()
-        if x=="start" :
+        if x=="start" or x=="시작" :
             break
     while True:
         velo=""
         temp2=-1
         x=file.readline().strip()
         y=x.split(" ")
-        if x=="end" :
+        if x=="end" or x=="종료" :
             if loops>0 :
                 for J in range(len(loop1)):
                     verse.append(loop1[J]+[])
@@ -123,7 +123,7 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                     midi[track].append(verse[I])
             break
         else :
-            if y[0]=="track" or y[0]=="drum" :
+            if y[0]=="track" or y[0]=="drum" or y[0]=="트랙" or y[0]=="드럼" :
                 if loops>0 :
                     for J in range(len(loop1)):
                         verse.append(loop1[J]+[])
@@ -179,7 +179,7 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                 if play==1 :
                     num+=1
                     play=0
-                    if y[0]=="drum" :
+                    if y[0]=="drum" or y[0]=="드럼" :
                         drum.append(num)
             elif y[0]=="fine" or y[0]=="피네" :
                 fine=1
