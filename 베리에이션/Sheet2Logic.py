@@ -37,6 +37,7 @@ drum=[]
 track=-1
 num=1
 play=0
+drumplay=0
 tempo=0
 loops=0
 verse=[]
@@ -86,6 +87,8 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         if y[0]=="*" :
             continue
         if x=="end" or x=="종료" :
+            if play==1 and drumplay==1 :
+                drum.append(num)
             if loops>0 :
                 for J in range(len(loop1)):
                     verse.append(loop1[J]+[])
@@ -181,10 +184,13 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                 fine=0
                 segno=0
                 if play==1 :
+                    if drumplay==1 :
+                        drum.append(num)
                     num+=1
                     play=0
-                    if y[0]=="drum" or y[0]=="드럼" :
-                        drum.append(num)
+                drumplay=0
+                if y[0]=="drum" or y[0]=="드럼" :
+                    drumplay=1
             elif y[0]=="fine" or y[0]=="피네" :
                 fine=1
                 continue
