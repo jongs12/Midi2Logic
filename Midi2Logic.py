@@ -4,8 +4,7 @@ print()
 
 #확인
 this=__file__.split("\\")
-name=""
-name+=this[0]
+name=this[0]
 for I in range(1,len(this)-1):
     name+="/"
     name+=this[I]
@@ -25,17 +24,22 @@ print()
 
 error=0
 with open(textlocate,"w") as file:
-    mid=mido.MidiFile(midilocate,clip=True)
-    try:
-        file.write(str(mid))
-    except:
-        print("이런, 뭔가가 잘못되었네요. 직접 복사해 주시겠어요?")
-        print("잠시만요...")
-        error=1
-if error==1 :
-    print(mid)
-    print("붙여넣는 위치: "+textlocate)
-    input("저장 후 엔터를 눌러 계속합니다.")
+    mid=str(mido.MidiFile(midilocate,clip=True))
+    errorlines=[]
+    mid=mid.split("\n")
+    for I in range(len(mid)):
+        try:
+            file.write(mid[I])
+            file.write("\n")
+        except:
+            file.write("오류로 인해 제거된 라인입니다.\n")
+            errorlines.append(mid[I])
+            error+=1
+if error>0 :
+    print("다음 라인이 인코딩 오류로 인해 제거되었습니다:")
+    for I in range(len(errorlines)):
+        print(errorlines[I])
+    print("note_on만 아니면 딱히 상관은 없어요.")
     print()
 
 block=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]
@@ -79,6 +83,8 @@ with open(textlocate,"r") as file:
         temp2=-1
         velo=""
         x=file.readline().strip()
+        if x=="오류로 인해 제거된 라인입니다." :
+            continue
         if x=="])" :
             break
         else :
