@@ -34,6 +34,7 @@ block8=['도0', '렐0', '레0', '메0', '미0', '파0', '셀0', '솔0', '랄0', 
 note=['0.00', '0.01', '0.02', '0.03', '0.04', '0.05', '0.06', '0.07', '0.08', '0.09', '0.10', '0.11', '1.00', '1.01', '1.02', '1.03', '1.04', '1.05', '1.06', '1.07', '1.08', '1.09', '1.10', '1.11', '2.00', '2.01', '2.02', '2.03', '2.04', '2.05', '2.06', '2.07', '2.08', '2.09', '2.10', '2.11', '3.00', '3.01', '3.02', '3.03', '3.04', '3.05', '3.06', '3.07', '3.08', '3.09', '3.10', '3.11', '4.00', '4.01', '4.02', '4.03', '4.04', '4.05', '4.06', '4.07', '4.08', '4.09', '4.10', '4.11', '5.00', '5.01', '5.02', '5.03', '5.04', '5.05', '5.06', '5.07', '5.08', '5.09', '5.10', '5.11', '6.00', '6.01', '6.02', '6.03', '6.04', '6.05', '6.06', '6.07', '6.08', '6.09', '6.10', '6.11']
 midi=[]
 drum=[]
+tempdrum=[]
 track=-1
 num=1
 play=0
@@ -87,11 +88,13 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         if y[0]=="*" :
             continue
         if x=="end" or x=="종료" :
-            if play==1 :
-                if drumplay==1 :
-                    drum.append(num)
-            else :
+            if play==0 :
                 num-=1
+                if drumplay==1 :
+                    for I in range(len(drum)-1):
+                        tempdrum.append(drum[I])
+                    drum=tempdrum
+                    tempdrum=[]
             if loops>0 :
                 for J in range(len(loop1)):
                     verse.append(loop1[J]+[])
@@ -166,14 +169,18 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                 temp=0
                 fine=0
                 segno=0
+                if drumplay==1 and play==0 :
+                    for I in range(len(drum)-1):
+                        tempdrum.append(drum[I])
+                    drum=tempdrum
+                    tempdrum=[]
                 if play==1 :
-                    if drumplay==1 :
-                        drum.append(num)
                     num+=1
                     play=0
                 drumplay=0
                 if y[0]=="drum" or y[0]=="드럼" :
                     drumplay=1
+                    drum.append(num)
             elif y[0]=="fine" or y[0]=="피네" :
                 fine=1
                 continue
