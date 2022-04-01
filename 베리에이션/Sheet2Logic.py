@@ -87,8 +87,11 @@ with open(textlocate,"r",encoding="UTF-8") as file:
         if y[0]=="*" :
             continue
         if x=="end" or x=="종료" :
-            if play==1 and drumplay==1 :
-                drum.append(num)
+            if play==1 :
+                if drumplay==1 :
+                    drum.append(num)
+            else :
+                num-=1
             if loops>0 :
                 for J in range(len(loop1)):
                     verse.append(loop1[J]+[])
@@ -103,27 +106,17 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                 for J in range(len(loop3)):
                     loop3[J][1]+=(temp-bsegno)
                 if segno==0 :
-                    for I in range(loops-2):
-                        for J in range(len(loop1)):
-                            verse.append(loop1[J]+[])
-                        for J in range(len(loop1)):
-                            loop1[J][1]+=temp
-                        for J in range(len(loop3)):
-                            verse.append(loop3[J]+[])
-                        for J in range(len(loop3)):
-                            loop3[J][1]+=temp
-                    for I in range(len(loop1)):
-                        verse.append(loop1[I]+[])
-                else :
-                    for I in range(loops-2):
-                        for J in range(len(loop2)):
-                            verse.append(loop2[J]+[])
-                        for J in range(len(loop2)):
-                            loop2[J][1]+=(temp-bsegno)
-                        for J in range(len(loop3)):
-                            verse.append(loop3[J]+[])
-                        for J in range(len(loop3)):
-                            loop3[J][1]+=(temp-bsegno)
+                    loop2=loop1
+                for I in range(loops-2):
+                    for J in range(len(loop2)):
+                        verse.append(loop2[J]+[])
+                    for J in range(len(loop2)):
+                        loop2[J][1]+=(temp-bsegno)
+                    for J in range(len(loop3)):
+                        verse.append(loop3[J]+[])
+                    for J in range(len(loop3)):
+                        loop3[J][1]+=(temp-bsegno)
+                if loops>1 :
                     for I in range(len(loop2)):
                         verse.append(loop2[I]+[])
                 for I in range(len(verse)):
@@ -145,27 +138,17 @@ with open(textlocate,"r",encoding="UTF-8") as file:
                     for J in range(len(loop3)):
                         loop3[J][1]+=(temp-bsegno)
                     if segno==0 :
-                        for I in range(loops-2):
-                            for J in range(len(loop1)):
-                                verse.append(loop1[J]+[])
-                            for J in range(len(loop1)):
-                                loop1[J][1]+=temp
-                            for J in range(len(loop3)):
-                                verse.append(loop3[J]+[])
-                            for J in range(len(loop3)):
-                                loop3[J][1]+=temp
-                        for I in range(len(loop1)):
-                            verse.append(loop1[I]+[])
-                    else :
-                        for I in range(loops-2):
-                            for J in range(len(loop2)):
-                                verse.append(loop2[J]+[])
-                            for J in range(len(loop2)):
-                                loop2[J][1]+=(temp-bsegno)
-                            for J in range(len(loop3)):
-                                verse.append(loop3[J]+[])
-                            for J in range(len(loop3)):
-                                loop3[J][1]+=(temp-bsegno)
+                        loop2=loop1
+                    for I in range(loops-2):
+                        for J in range(len(loop2)):
+                            verse.append(loop2[J]+[])
+                        for J in range(len(loop2)):
+                            loop2[J][1]+=(temp-bsegno)
+                        for J in range(len(loop3)):
+                            verse.append(loop3[J]+[])
+                        for J in range(len(loop3)):
+                            loop3[J][1]+=(temp-bsegno)
+                    if loops>1 :
                         for I in range(len(loop2)):
                             verse.append(loop2[I]+[])
                     for I in range(len(verse)):
