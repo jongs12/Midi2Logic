@@ -12,7 +12,7 @@
 ![1](https://user-images.githubusercontent.com/99316134/159131383-b411fbd9-c9af-437c-aad0-586a655c6fcb.PNG)
 
 IDLE로 실행한다는 것은 한 줄씩 실행한다는 것이 아니라, 셸 창에서 'File -> Open'으로 파일을 연 다음 F5로 한번에 실행한다는 의미입니다.
-(현재는 업데이트로 IDLE 없이 그냥 파이썬 파일을 바로 실행해도 문제는 없으나 이는 비추합니다. 자세한 내용은 후술)
+(현재는 업데이트로 IDLE 없이 그냥 파이썬 파일을 바로 실행해도 문제 없습니다.)
 
 ![2](https://user-images.githubusercontent.com/99316134/159131591-b6206ac3-72c7-41cd-b224-5c9c2ab3c146.PNG)
 
@@ -25,16 +25,9 @@ mido 모듈을 설치하려면 명령 프롬프트에 따옴표 없이 'pip inst
 따라서 미디 파일이 이 프로그램과 같은 폴더 안에 들어 있어야 합니다.
 미디.txt 파일과 로직.txt 파일에는 쓰기를 합니다. 이때 기존 파일 내용은 지워지니 주의하세요.
 
-![4](https://user-images.githubusercontent.com/99316134/159131916-bec72ae2-5338-41a6-b68f-7d98551d2982.PNG)
+![4](https://user-images.githubusercontent.com/99316134/161279164-37afdb21-5c85-4cb9-aa2d-6c1a16771652.PNG)
 
-가끔씩 인코딩 에러가 나는지 자동으로 미디 파일을 읽지 못할 때가 있습니다. 그럴 때는 Squeezed text라 쓰인 부분을 복사해서
-미디 파일이 저장되는 곳(프로그램과 같은 폴더의 미디.txt)에 직접 붙여넣어 저장해주면 됩니다.
-만약 붙여넣기를 하지 않고 강제로 진행하려 하면 파일이 비어 있기 때문에 에러가 납니다.
-
-![5](https://user-images.githubusercontent.com/99316134/159131971-0191034e-9c06-449e-8727-1714da26cdfa.PNG)
-
-IDLE에서 실행하지 않고 파일을 바로 실행했을 때 같은 오류가 발생하면 텍스트가 압축되지 않고 그대로 출력되어 복사하기가 난감해집니다.
-그래서 개인적으로 파일을 바로 실행하는 것은 비추천합니다.
+가끔씩 인코딩 에러가 나서 저런 메시지가 뜰 때가 있는데, set_tempo / note_on / note_off 처럼 음악 전체에 영향을 줄 수 있는 라인만 아니면 그냥 무시하셔도 됩니다.
 
 ![6](https://user-images.githubusercontent.com/99316134/159132217-dfbe9e0f-d276-4fe5-9dfc-a9ee3af4bba0.PNG)
 
