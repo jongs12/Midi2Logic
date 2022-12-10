@@ -1,4 +1,4 @@
-# Midi2Logic
+# 개발 중단된 버전입니다. [여기](https://github.com/jongs12/Midi2Logic-2)로 가세요.
 
 
 [KO]
